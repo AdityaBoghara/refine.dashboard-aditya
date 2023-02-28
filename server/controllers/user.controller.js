@@ -1,7 +1,24 @@
-import User from "../mongodb/models/user.js"
+import User from "../mongodb/models/user.js";
 
-const getAllUsers = async(req, res) => {} 
-const createUser = async(req, res) => {} 
-const getUserInfoByID = async(req, res) => {} 
+const getAllUsers = async (req, res) => {};
 
-export {getAllUsers,createUser, getUserInfoByID} 
+const createUser = async (req, res) => {
+  try {
+    const { name, email, avatar } = req.body;
+
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      return res.status(200).json(userExists);
+    } else {
+      const newUser = await User.create({ name, email, avatar });
+      return res.status(200).json(newUser);
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getUserInfoByID = async (req, res) => {};
+
+export { getAllUsers, createUser, getUserInfoByID };
